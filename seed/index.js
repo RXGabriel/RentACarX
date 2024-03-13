@@ -1,54 +1,57 @@
-const Car = require('./../src/entities/car')
-const CarCategory = require('./../src/entities/carCategory')
-const Customer = require('./../src/entities/customer')
+const faker = require('@faker-js/faker'); // Corrigindo a importação do pacote faker
+const { join } = require('path');
+const { writeFile } = require('fs/promises');
 
-const { faker } = require('@faker-js/faker')
-const { join } = require('path')
-const { writeFile } = require('fs/promises')
+const Car = require('../src/entities/car');
+const CarCategory = require('../src/entities/carCategory');
+const Customer = require('../src/entities/customer');
 
-const seederBaseFolder = join(__dirname, "../", "database")
-const ITENS_AMOUNT = 2
+const seederBaseFolder = join(__dirname, '../', 'database');
+const ITEMS_AMOUNT = 2;
 
 const carCategory = new CarCategory({
-    id: faker.string.uuid(),
+    id: faker.datatype.uuid(),
     name: faker.vehicle.type(),
     carIds: [],
-    price: faker.finance.amount({ min: 20, max: 100 })
-})
+    price: +faker.finance.amount(20, 100)
+});
 
-
-const cars = []
-const customers = []
-for (let i = 0; i < ITENS_AMOUNT; i++) {
+const cars = [];
+const customers = [];
+for (let index = 0; index < ITEMS_AMOUNT; index++) { // Corrigindo o loop para iterar sobre ITEMS_AMOUNT
     const car = new Car({
-        id: faker.string.uuid(),
+        id: faker.datatype.uuid(),
         name: faker.vehicle.model(),
+        releaseYear: faker.date.past().getFullYear(),
         available: true,
         gasAvailable: true,
-        releaseYear: faker.date.past().getFullYear()
-    })
-    carCategory.carIds.push(car.id)
-    cars.push(car)
+    });
+    carCategory.carIds.push(car.id);
+    cars.push(car);
 
     const customer = new Customer({
-        id: faker.string.uuid(),
-        name: faker.person.fullName(),
-        age: faker.number.int()({ min: 18, max: 50 })
-    })
-    customers.push(customer)
+        id: faker.datatype.uuid(),
+        name: faker.name.firstName(),
+        age: faker.datatype.number({ min: 18, max: 50 })
+    });
+    customers.push(customer);
 }
 
-const write = (filename, data) => writeFile(
-    join(seederBaseFolder, filename),
-    JSON.stringify(data)
-);
+const write = async (filename, data) => { // Adicionando async ao write para usar o await
+    await writeFile(
+        join(seederBaseFolder, filename),
+        JSON.stringify(data, null, 2)
+    );
+};
 
-; (async () => {
-    await write('cars.json', cars);
-    await write('customers.json', customers);
-    await write('carCategories.json', [carCategory]);
+(async () => {
+    try {
+        await write('cars.json', cars);
+        await write('customers.json', customers);
+        await write('carCategories.json', [carCategory]);
 
-    console.log('cars', cars);
-    console.log('customers', customers);
-    console.log('carCategory', carCategory);
+        console.log('Seed data has been generated successfully!');
+    } catch (error) {
+        console.error('Error generating seed data:', error);
+    }
 })();

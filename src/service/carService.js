@@ -7,14 +7,18 @@ class CarService {
 
     getRandomPositionFromArray(list) {
         const listLength = list.length;
-        return Math.floor(Math.random() * listLength);
+        return Math.floor(
+            Math.random() * (listLength)
+        );
     }
 
     chooseRandomCar(carCategory) {
+        console.log('carCategory:', carCategory);
         const randomCarIndex = this.getRandomPositionFromArray(carCategory.carIds);
         const carId = carCategory.carIds[randomCarIndex];
         return carId;
     }
+
 
 
     async getAvailableCar(carCategory) {
