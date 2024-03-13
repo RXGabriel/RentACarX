@@ -12,7 +12,7 @@ const ITENS_AMOUNT = 2
 const carCategory = new CarCategory({
     id: faker.string.uuid(),
     name: faker.vehicle.type(),
-    carId: [],
+    carIds: [],
     price: faker.finance.amount({ min: 20, max: 100 })
 })
 
@@ -27,25 +27,28 @@ for (let i = 0; i < ITENS_AMOUNT; i++) {
         gasAvailable: true,
         releaseYear: faker.date.past().getFullYear()
     })
-    carCategory.carId.push(car.id)
+    carCategory.carIds.push(car.id)
     cars.push(car)
 
     const customer = new Customer({
         id: faker.string.uuid(),
         name: faker.person.fullName(),
-        age: faker.datatype.number({ min: 18, max: 50 })
+        age: faker.number.int()({ min: 18, max: 50 })
     })
     customers.push(customer)
 }
 
-const write = (fileName, data) => writeFile(join(seederBaseFolder, fileName), JSON.stringify(data))
+const write = (filename, data) => writeFile(
+    join(seederBaseFolder, filename),
+    JSON.stringify(data)
+);
 
-    ; (async () => {
-        await write('cars.json', cars)
-        await write('customers.json', cars)
-        await write('carCategory.json', [carCategory])
+; (async () => {
+    await write('cars.json', cars);
+    await write('customers.json', customers);
+    await write('carCategories.json', [carCategory]);
 
-        console.log('cars', cars)
-        console.log('customers', customers)
-        console.log('carCategory', carCategory)
-    })()
+    console.log('cars', cars);
+    console.log('customers', customers);
+    console.log('carCategory', carCategory);
+})();

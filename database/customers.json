@@ -1,1 +1,17 @@
-[{"id":"48d82114-2f2c-4012-a4c6-ebc012a14789","name":"Malibu","releaseYear":2023,"available":true,"gasAvailable":true},{"id":"a5167135-8b06-4c49-8bfa-0d44978e517e","name":"Spyder","releaseYear":2023,"available":true,"gasAvailable":true}]
+[
+    {
+      "id": "9fa0278c-44b1-4d0c-b076-c57d1bed6680",
+      "name": "Issac",
+      "age": 37
+    },
+    {
+      "id": "e96fc4c9-bc4f-420d-bec2-51927e0bd31e",
+      "name": "Emmanuel",
+      "age": 24
+    },
+    {
+      "id": "dddbcc0d-135c-4ad5-86c6-f1706cd3bafd",
+      "name": "Aurelia",
+      "age": 22
+    }
+  ]
