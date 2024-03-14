@@ -4,6 +4,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 
 const CarService = require('./../../src/service/carService');
+const Tax = require('../../src/entities/tax');
 const carsDatabase = join(__dirname, './../../database', 'cars.json');
 
 const mocks = {
@@ -75,4 +76,30 @@ describe('CarService Suite Tests', () => {
         expect(carService.carRepository.find.calledWithExactly(car.id)).to.be.ok;
         expect(result).to.be.deep.equal(expected);
     });
+
+    it('given a carCategory, customer and numberOfDays it should calculate final amount in real', async () => {
+        const customer = Object.create(mocks.validCustomer);
+        customer.age = 50;
+
+        const carCategory = Object.create(mocks.validCarCategory);
+        carCategory.price = 37.6;
+
+        const numberOfDays = 5;
+
+        // Correção aqui
+        sandbox.stub(
+            Tax,
+            "taxesBasedOnAge"
+        ).get(() => [{ from: 40, to: 50, then: 1.3 }]);
+
+        const expectedV = carService.currencyFormat.format(244.40);
+        const result = carService.calculateFinalPrice(
+            customer,
+            carCategory,
+            numberOfDays
+        );
+
+        expect(result).to.be.deep.equal(expectedV);
+    });
+
 })
